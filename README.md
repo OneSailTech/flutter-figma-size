@@ -10,7 +10,13 @@ Flutter UI sizing skill for Figma 750px design drafts. Compatible with any agent
 npx github:OneSailTech/flutter-figma-size
 ```
 
-启 agent 即可生效，无需改配置文件。
+### 手动克隆
+
+```bash
+git clone https://github.com/OneSailTech/flutter-figma-size.git .opencode/skills/flutter-figma-size
+```
+
+安装后重启 agent 即可生效，无需改配置文件。
 
 ## Rules
 

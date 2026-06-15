@@ -218,37 +218,16 @@ Options (non-interactive):
   --platform <ids>      Comma-separated: opencode,claude,codex,antigravity,cursor,trae,windsurf,copilot | all
 
 Examples:
-  npx flutter-figma-size                          # interactive
-  npx flutter-figma-size --scope project --platform all
-  npx flutter-figma-size --scope global --platform opencode,claude
-  npx flutter-figma-size uninstall --scope project --platform cursor
+   npx flutter-figma-size                          # interactive
+   npx flutter-figma-size --platform opencode --scope project
+   npx flutter-figma-size --platform opencode,claude --scope global
+   npx flutter-figma-size uninstall --platform cursor --scope project
 `);
     return;
   }
 
   const root = findProjectRoot(process.cwd());
   const detected = detectPlatforms(root);
-
-  // ── resolve scope ──
-  let scope = parseScope(
-    args.indexOf('--scope') !== -1 ? args[args.indexOf('--scope') + 1] : null
-  );
-
-  if (!scope) {
-    console.log('\n  flutter-figma-size installer\n');
-    console.log('  Install scope:');
-    console.log('    1. Project-level  (install in current project)');
-    const hasNativeGlobal = detected.some(id => PLATFORMS.find(p => p.id === id)?.native);
-    if (hasNativeGlobal) console.log('    2. Global  (~/.config/opencode/skills/ etc.)');
-    console.log('    q. Cancel\n');
-
-    while (!scope) {
-      const ans = (await ask('  Select [1/2/q]: ')).trim().toLowerCase();
-      if (ans === 'q') { console.log('Cancelled.'); return; }
-      if (ans === '2') scope = 'global';
-      else if (ans === '1' || ans === '') scope = 'project';
-    }
-  }
 
   // ── resolve platforms ──
   let platformArg = null;
@@ -258,7 +237,8 @@ Examples:
   let selected = platformArg ? parsePlatforms(platformArg) : null;
 
   if (!selected) {
-    console.log('\n  Available platforms:');
+    console.log('\n  flutter-figma-size installer\n');
+    console.log('  Available platforms:');
     PLATFORMS.forEach((p, i) => {
       const tag = p.native ? 'SKILL.md' : p.file;
       const mark = detected.includes(p.id) ? ' \u2713' : '';
@@ -275,6 +255,28 @@ Examples:
         ans.split(',').map(s => { const n = parseInt(s.trim(), 10) - 1; return n >= 0 && n < PLATFORMS.length ? PLATFORMS[n].id : null; }).filter(Boolean)
       )];
       if (ids.length > 0) selected = ids;
+    }
+  }
+
+  // ── resolve scope ──
+  let scope = parseScope(
+    args.indexOf('--scope') !== -1 ? args[args.indexOf('--scope') + 1] : null
+  );
+
+  if (!scope) {
+    const selPlatforms = selected.map(id => PLATFORMS.find(p => p.id === id)).filter(Boolean);
+    const hasGlobal = selPlatforms.some(p => p.native && p.global);
+
+    console.log('\n  Install scope:');
+    console.log('    1. Project-level  (install in current project)');
+    if (hasGlobal) console.log('    2. Global  (~/.config/opencode/skills/ etc.)');
+    console.log('    q. Cancel\n');
+
+    while (!scope) {
+      const ans = (await ask('  Select [1/2/q]: ')).trim().toLowerCase();
+      if (ans === 'q') { console.log('Cancelled.'); return; }
+      if (ans === '2' && hasGlobal) scope = 'global';
+      else if (ans === '1' || ans === '') scope = 'project';
     }
   }
 
