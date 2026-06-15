@@ -1,8 +1,16 @@
 # flutter-figma-size
 
-Flutter UI sizing rules for Figma 750px design drafts.
+Flutter UI sizing skill for Figma 750px design drafts. Compatible with any agent that supports SKILL.md (opencode, Claude Code, Codex CLI, Antigravity, etc.).
 
-Layout → `.ui(context)`, font → `.font(context)`, with clamping to prevent over-scaling on tablets and landscape mode.
+## 安装
+
+### 一键安装（推荐）
+
+```bash
+npx github:OneSailTech/flutter-figma-size
+```
+
+启 agent 即可生效，无需改配置文件。
 
 ## Rules
 

@@ -1,0 +1,18 @@
+{
+  "name": "flutter-figma-size",
+  "version": "1.0.0",
+  "description": "Flutter Figma 750px sizing skill for opencode / Claude Code / Codex CLI / Cursor / Trae / Windsurf / Copilot",
+  "license": "MIT",
+  "author": "OneSailTech",
+  "bin": {
+    "flutter-figma-size": "bin/cli.js"
+  },
+  "files": [
+    "SKILL.md",
+    "references/",
+    "LICENSE",
+    "README.md",
+    "bin/",
+    "converters/"
+  ]
+}
